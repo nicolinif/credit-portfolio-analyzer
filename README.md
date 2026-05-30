@@ -107,7 +107,7 @@ Business Systems Analyst en el sector fintech.
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/francisconicolini/credit-portfolio-analyzer.git
+git clone https://github.com/nicolinif/credit-portfolio-analyzer.git
 cd credit-portfolio-analyzer
 ```
 
@@ -238,7 +238,7 @@ Ex-Oficial de Negocios del Banco de la Nación Argentina (7 años) en transició
 Analista Funcional / Business Systems Analyst en el sector fintech.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-francisconicolini-0077B5?logo=linkedin)](https://www.linkedin.com/in/francisconicolini/)
-[![GitHub](https://img.shields.io/badge/GitHub-francisconicolini-181717?logo=github)](https://github.com/francisconicolini)
+[![GitHub](https://img.shields.io/badge/GitHub-nicolinif-181717?logo=github)](https://github.com/nicolinif)
 
 ---
 
