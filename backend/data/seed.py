@@ -265,17 +265,10 @@ def _gen_segmento() -> str:
     return random.choices(["retail", "pyme", "corporativo"], weights=[75, 20, 5])[0]
 
 
-def _gen_calificacion(max_dias_mora: int) -> str:
-    """Calificación interna A-E según peor situación de mora del cliente."""
-    if max_dias_mora == 0:
-        return random.choices(["A", "B", "C"], weights=[50, 35, 15])[0]
-    if max_dias_mora <= 30:
-        return random.choices(["B", "C", "D"], weights=[40, 40, 20])[0]
-    if max_dias_mora <= 90:
-        return random.choices(["C", "D"],      weights=[50, 50])[0]
-    if max_dias_mora <= 365:
-        return random.choices(["D", "E"],      weights=[40, 60])[0]
-    return "E"
+def _situacion_deudor(dias_mora_list: list[int]) -> int:
+    """Situación BCRA del deudor: MAX(situacion_bcra) de todas sus deudas.
+    Un cliente se clasifica por su peor deuda (Com. A 2216/6938)."""
+    return max(_dias_to_bcra(d) for d in dias_mora_list)
 
 
 # ---------------------------------------------------------------------------
@@ -405,15 +398,14 @@ def seed():
         segmento = _gen_segmento()
         n_deudas = random.choices([1, 2, 3], weights=[50, 35, 15])[0]
 
-        moras    = [_pick_mora() for _ in range(n_deudas)]
-        max_mora = max(d for d, _ in moras)
-        calif    = _gen_calificacion(max_mora)
+        moras            = [_pick_mora() for _ in range(n_deudas)]
+        situacion_deudor = _situacion_deudor([d for d, _ in moras])
 
         cur.execute(
             "INSERT INTO clientes "
             "(nombre, apellido, dni, cuil, genero, fecha_nacimiento, "
             " email, telefono, domicilio, localidad, provincia, fecha_alta, "
-            " segmento, calificacion_interna) "
+            " segmento, situacion_deudor) "
             "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 nombre, apellido, dni, cuil, genero,
@@ -423,7 +415,7 @@ def seed():
                 _gen_domicilio(),
                 localidad, prov,
                 (TODAY - datetime.timedelta(days=random.randint(365, 8 * 365))).isoformat(),
-                segmento, calif,
+                segmento, situacion_deudor,
             ),
         )
         id_cliente = cur.lastrowid

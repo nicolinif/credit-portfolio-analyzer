@@ -24,12 +24,14 @@ CREATE TABLE IF NOT EXISTS clientes (
     provincia            TEXT,
     fecha_alta           TEXT    NOT NULL,   -- ISO 8601: YYYY-MM-DD
     segmento             TEXT    NOT NULL CHECK (segmento IN ('retail', 'pyme', 'corporativo')),
-    calificacion_interna TEXT    NOT NULL CHECK (calificacion_interna IN ('A', 'B', 'C', 'D', 'E'))
-    -- A=excelente, B=bueno, C=normal, D=seguimiento, E=irrecuperable
+    situacion_deudor     INTEGER NOT NULL CHECK (situacion_deudor BETWEEN 1 AND 5)
+    -- Situación BCRA del deudor: MAX(situacion_bcra) de todas sus deudas activas.
+    -- 1=Normal, 2=Con seguimiento especial, 3=Con problemas,
+    -- 4=Con alto riesgo de insolvencia, 5=Irrecuperable (Com. A 2216/6938)
 );
 
 CREATE INDEX IF NOT EXISTS idx_clientes_segmento      ON clientes (segmento);
-CREATE INDEX IF NOT EXISTS idx_clientes_calificacion  ON clientes (calificacion_interna);
+CREATE INDEX IF NOT EXISTS idx_clientes_situacion     ON clientes (situacion_deudor);
 
 -- ---------------------------------------------------------------------------
 -- 2. PRODUCTOS
@@ -121,7 +123,7 @@ SELECT
     c.genero,
     c.fecha_nacimiento,
     c.segmento,
-    c.calificacion_interna,
+    c.situacion_deudor,
     c.localidad,
     c.provincia,
     -- Deuda

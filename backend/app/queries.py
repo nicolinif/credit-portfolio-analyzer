@@ -85,7 +85,7 @@ def get_top_clientes(n: int = 10) -> list[dict]:
             c.id_cliente,
             c.nombre || ' ' || c.apellido  AS nombre_completo,
             c.segmento,
-            c.calificacion_interna,
+            c.situacion_deudor,
             COUNT(d.id_deuda)              AS cantidad_deudas,
             ROUND(SUM(d.saldo_capital), 2) AS saldo_total
         FROM clientes c

@@ -73,12 +73,16 @@ class TestGetTopClientes:
 
     def test_required_keys(self):
         for r in get_top_clientes(n=3):
-            assert "id_cliente"           in r
-            assert "nombre_completo"      in r
-            assert "segmento"             in r
-            assert "calificacion_interna" in r
-            assert "cantidad_deudas"      in r
-            assert "saldo_total"          in r
+            assert "id_cliente"       in r
+            assert "nombre_completo"  in r
+            assert "segmento"         in r
+            assert "situacion_deudor" in r
+            assert "cantidad_deudas"  in r
+            assert "saldo_total"      in r
+
+    def test_situacion_deudor_valida(self):
+        for r in get_top_clientes(n=10):
+            assert r["situacion_deudor"] in {1, 2, 3, 4, 5}
 
     def test_ordenado_descendente(self):
         saldos = [r["saldo_total"] for r in get_top_clientes(n=10)]
